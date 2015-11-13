@@ -97,9 +97,11 @@ func (p Packet) String() string {
 	return buf
 }
 
-func (p *Packet) WriteToFile() bool {
+func (p *Packet) WriteToFile() error {
 	if i := C.write_to_file(); i == 0 {
-		return true
+		return nil
+	} else if i == 1 {
+		return fmt.Errorf("output file isn't opened")
 	}
-	return false
+	return nil
 }

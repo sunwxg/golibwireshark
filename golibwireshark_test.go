@@ -45,7 +45,10 @@ func TestIsKey(t *testing.T) {
 		fmt.Fprintln(w, p)
 	}
 
-	p.WriteToFile()
+	err = p.WriteToFile()
+	if err != nil {
+		t.Errorf("%s", err)
+	}
 
 	p.FreePacket()
 
