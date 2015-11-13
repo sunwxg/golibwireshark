@@ -12,7 +12,7 @@ static e_prefs *get_prefs()
 	return prefs_p;
 }
 
-int init(char *filename)
+int init(char *filename, char *savefile)
 {
 	int          err = 0;
 	gchar       *err_info = NULL;
@@ -28,7 +28,6 @@ int init(char *filename)
 
 	cfile.wth = wtap_open_offline(cfile.filename, WTAP_TYPE_AUTO, &err, &err_info, TRUE);
 	if (cfile.wth == NULL) {
-		/*printf("open offline file error\n");*/
 		goto fail;
 	}
 
@@ -40,14 +39,21 @@ int init(char *filename)
 	timestamp_set(cfile);
 	cfile.frames = new_frame_data_sequence();
 
+	//init pdh. output file
+	if (savefile != NULL){
+		if (!open_output_file(savefile, &err)) {
+			printf("open output file error\n");
+			goto fail;
+		}
+	}
+
 	prefs_p = get_prefs();
 
 	build_column_format_array(&cfile.cinfo, prefs_p->num_cols, TRUE);
 
 	return 0;
 fail:
-	epan_cleanup();
-
+	clean();
 	return 1;
 }
 
@@ -92,15 +98,24 @@ static gboolean read_packet(epan_dissect_t **edt_r)
 
 void clean()
 {
+	int err = 0;
+
 	if (cfile.frames != NULL) {
 		free_frame_data_sequence(cfile.frames);
 		cfile.frames = NULL;
 	}
 
-	wtap_close(cfile.wth);
-	cfile.wth = NULL;
+	if (cfile.wth != NULL) {
+		wtap_close(cfile.wth);
+		cfile.wth = NULL;
+	}
 
-	epan_free(cfile.epan);
+	if (pdh != NULL) {
+		wtap_dump_close(pdh, &err);
+	}
+
+	if (cfile.epan != NULL)
+		epan_free(cfile.epan);
 
 	epan_cleanup();
 }
@@ -323,4 +338,47 @@ print_field(proto_node *node, int *level, char **buf)
 		snprintf(*buf + strlen(*buf), BUFSIZE, "[%s] %s\n", name, value);
 		/*printf("[%s] %s\n", name, value);*/
 	}
+}
+
+int  write_to_file()
+{
+	int err;
+	if (pdh == NULL) {
+		return 1;
+	}
+
+	if (!wtap_dump(pdh, wtap_phdr(cfile.wth), wtap_buf_ptr(cfile.wth), &err)) {
+		/*printf("write output file error\n");*/
+		return err;
+	}
+	return 0;
+}
+
+static gboolean
+open_output_file(char *savefile, int *err)
+{
+	wtapng_section_t *shb_hdr = wtap_file_get_shb_info(cfile.wth);
+	wtapng_iface_descriptions_t *idb_inf = wtap_file_get_idb_info(cfile.wth);
+
+	guint snapshot_length = wtap_snapshot_length(cfile.wth);
+	if (snapshot_length == 0) {
+		snapshot_length = WTAP_MAX_PACKET_SIZE;
+	}
+
+	gint linktype = wtap_file_encap(cfile.wth);
+	guint out_file_type = WTAP_FILE_TYPE_SUBTYPE_PCAP;
+
+	pdh = wtap_dump_open_ng(savefile, out_file_type, linktype,
+			snapshot_length, FALSE, shb_hdr, idb_inf, err);
+
+	g_free(idb_inf);
+	idb_inf = NULL;
+
+	g_free(shb_hdr);
+	shb_hdr = NULL;
+
+	if (pdh == NULL) {
+		return FALSE;
+	}
+	return TRUE;
 }

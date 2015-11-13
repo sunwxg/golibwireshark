@@ -7,8 +7,9 @@ import (
 
 func main() {
 	file := "../../1.pcap"
+	outfile := "o.pcap"
 
-	err := golibwireshark.Init(file, "")
+	err := golibwireshark.Init(file, outfile)
 	if err != nil {
 		fmt.Printf("open file failed\n")
 		return
@@ -25,7 +26,7 @@ func main() {
 			break
 		}
 
-		fmt.Println(p)
+		p.WriteToFile()
 
 		p.FreePacket()
 

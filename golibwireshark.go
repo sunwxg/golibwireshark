@@ -24,9 +24,15 @@ type Packet struct {
 	Field *C.struct__proto_node
 }
 
-func Init(file string) error {
-	filename := C.CString(file)
-	err := C.init(filename)
+func Init(filename, savefile string) error {
+	var err C.int
+
+	if savefile == "" {
+		err = C.init(C.CString(filename), nil)
+	} else {
+		err = C.init(C.CString(filename), C.CString(savefile))
+	}
+
 	if err != 0 {
 		return fmt.Errorf("can't open file")
 	}
@@ -89,4 +95,11 @@ func (p Packet) String() string {
 	}
 
 	return buf
+}
+
+func (p *Packet) WriteToFile() bool {
+	if i := C.write_to_file(); i == 0 {
+		return true
+	}
+	return false
 }

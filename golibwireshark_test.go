@@ -21,7 +21,7 @@ import (
 
 func TestIsKey(t *testing.T) {
 	file := "1.pcap"
-	err := golibwireshark.Init(file)
+	err := golibwireshark.Init(file, "o.pcap")
 	if err != nil {
 		t.Fatalf("%s", err)
 	}
@@ -44,6 +44,8 @@ func TestIsKey(t *testing.T) {
 		//fmt.Println(p)
 		fmt.Fprintln(w, p)
 	}
+
+	p.WriteToFile()
 
 	p.FreePacket()
 

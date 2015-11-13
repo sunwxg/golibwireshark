@@ -9,7 +9,7 @@ func main() {
 	file := "../../1.pcap"
 	key := "ip.addr"
 
-	golibwireshark.Init(file)
+	golibwireshark.Init(file, "")
 	defer golibwireshark.Clean()
 
 	var p golibwireshark.Packet

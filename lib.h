@@ -21,11 +21,14 @@
 
 //global variable
 capture_file cfile;
+wtap_dumper *pdh;
 
 
-int init(char *filename);
+int init(char *filename, char *savefile);
 
 void clean();
+
+int  write_to_file();
 
 void print_xml_packet();
 
@@ -44,6 +47,8 @@ char *print_packet(proto_tree *node);
 char *print_node(proto_node *node);
 
 proto_node *get_field(struct epan_dissect *edt, const char *name);
+
+static gboolean open_output_file(char *savefile, int *err);
 
 static void proto_node_print(proto_tree *tree, int *level, char **buf);
 
