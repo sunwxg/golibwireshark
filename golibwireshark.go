@@ -8,9 +8,9 @@ package golibwireshark
 #cgo CFLAGS: -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
 #cgo CFLAGS: -I/usr/include/wireshark
 #cgo CFLAGS: -I/usr/include/wireshark/wiretap
-#cgo CFLAGS: -I/home/home/person/wireshark-1.12.8
+#cgo CFLAGS: -I./include
 
-#include "lib.h"
+#include "./include/lib.h"
 
 */
 import "C"

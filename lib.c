@@ -1,4 +1,4 @@
-#include "lib.h"
+#include <lib.h>
 
 static e_prefs *get_prefs()
 {
