@@ -222,7 +222,6 @@ free_packet(struct epan_dissect *edt)
 void
 free_string(char *s)
 {
-	/*printf("return: %s", s);*/
 	free(s);
 }
 
@@ -247,7 +246,6 @@ proto_tree_pre_order(proto_tree *tree, const char *name, proto_node **node)
 
 	if (fi && fi->hfinfo) {
 		if (!strcmp(fi->hfinfo->abbrev, name)) {
-			/*printf("name: %s\n", fi->hfinfo->abbrev);*/
 			*node = pnode;
 			return TRUE;
 		}
@@ -320,7 +318,6 @@ print_field(proto_node *node, int *level, char **buf)
 
 	for (int i = 0; i < *level; i++) {
 		snprintf(*buf + strlen(*buf), BUFSIZE, "%s", ". ");
-		/*printf("%s", ". ");*/
 	}
 
 	const char *name = node->finfo->hfinfo->abbrev;
@@ -330,10 +327,8 @@ print_field(proto_node *node, int *level, char **buf)
 
 	if (value == NULL) {
 		snprintf(*buf + strlen(*buf), BUFSIZE, "[%s]\n", name);
-		/*printf("[%s]\n", name);*/
 	} else {
 		snprintf(*buf + strlen(*buf), BUFSIZE, "[%s] %s\n", name, value);
-		/*printf("[%s] %s\n", name, value);*/
 	}
 }
 
@@ -345,7 +340,6 @@ int  write_to_file()
 	}
 
 	if (!wtap_dump(pdh, wtap_phdr(cfile.wth), wtap_buf_ptr(cfile.wth), &err)) {
-		/*printf("write output file error\n");*/
 		return err;
 	}
 	return 0;
@@ -354,8 +348,11 @@ int  write_to_file()
 static gboolean
 open_output_file(char *savefile, int *err)
 {
-	wtapng_section_t *shb_hdr = wtap_file_get_shb_info(cfile.wth);
-	wtapng_iface_descriptions_t *idb_inf = wtap_file_get_idb_info(cfile.wth);
+	wtapng_section_t            *shb_hdr;
+	wtapng_iface_descriptions_t *idb_inf;
+
+	shb_hdr = wtap_file_get_shb_info(cfile.wth);
+	idb_inf = wtap_file_get_idb_info(cfile.wth);
 
 	guint snapshot_length = wtap_snapshot_length(cfile.wth);
 	if (snapshot_length == 0) {
