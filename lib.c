@@ -42,7 +42,7 @@ int init(char *filename, char *savefile)
 	//init pdh. output file
 	if (savefile != NULL){
 		if (!open_output_file(savefile, &err)) {
-			printf("open output file error\n");
+			/*printf("open output file error\n");*/
 			goto fail;
 		}
 	}
