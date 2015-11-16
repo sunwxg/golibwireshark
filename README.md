@@ -10,6 +10,7 @@ libwireshark library (I tested on version 1.12.7)
 - ubuntu
 ```
 apt-get install libwireshark-dev
+apt-get install libglib2.0-dev
 go get github.com/sunwxg/golibwireshark
 ```
 ###Examples
