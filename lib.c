@@ -12,6 +12,30 @@ static e_prefs *get_prefs()
 	return prefs_p;
 }
 
+int init_cfile(char *filename)
+{
+	int          err;
+	gchar       *err_info = NULL;
+
+	cap_file_init(&cfile);
+	cfile.filename = filename;
+
+	cfile.wth = wtap_open_offline(cfile.filename, WTAP_TYPE_AUTO, &err, &err_info, TRUE);
+	if (cfile.wth == NULL) {
+		return err;
+	}
+
+	cfile.count = 0;
+	cfile.epan = epan_new();
+	cfile.epan->data = &cfile;
+	cfile.epan->get_frame_ts = tshark_get_frame_ts;
+
+	timestamp_set(cfile);
+	cfile.frames = new_frame_data_sequence();
+
+	return 0;
+}
+
 int init(char *filename, char *savefile)
 {
 	int          err = 0;
@@ -22,22 +46,9 @@ int init(char *filename, char *savefile)
 
 	epan_init(register_all_protocols, register_all_protocol_handoffs, NULL, NULL);
 
-	//init cfile.
-	cap_file_init(&cfile);
-	cfile.filename = filename;
-
-	cfile.wth = wtap_open_offline(cfile.filename, WTAP_TYPE_AUTO, &err, &err_info, TRUE);
-	if (cfile.wth == NULL) {
+	err = init_cfile(filename);
+	if (err != 0)
 		goto fail;
-	}
-
-	cfile.count = 0;
-	cfile.epan = epan_new();
-	cfile.epan->data = &cfile;
-	cfile.epan->get_frame_ts = tshark_get_frame_ts;
-
-	timestamp_set(cfile);
-	cfile.frames = new_frame_data_sequence();
 
 	//init pdh. output file
 	if (savefile != NULL){
