@@ -46,12 +46,6 @@ func Init(inputfile, savefile string) error {
 	return nil
 }
 
-//PrintXMLPacket output the packet as XML format to stdout
-func (p Packet) PrintXMLPacket() {
-
-	C.print_xml_packet()
-}
-
 //Clean to end the dissection.
 func Clean() {
 

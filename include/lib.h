@@ -20,8 +20,8 @@
 #define BUFSIZE 2048 * 100
 
 //global variable
-capture_file cfile;
-wtap_dumper *pdh;
+capture_file cfile;  //input file index
+wtap_dumper *pdh;    //output file index
 
 
 int init(char *filename, char *savefile);

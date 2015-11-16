@@ -39,7 +39,6 @@ int init_cfile(char *filename)
 int init(char *filename, char *savefile)
 {
 	int          err = 0;
-	gchar       *err_info = NULL;
 	e_prefs     *prefs_p;
 
 	init_process_policies();
@@ -129,19 +128,6 @@ void clean()
 		epan_free(cfile.epan);
 
 	epan_cleanup();
-}
-
-void print_xml_packet()
-{
-	epan_dissect_t *edt;
-
-	while (read_packet(&edt)) {
-
-		proto_tree_write_pdml(edt, stdout);
-
-		epan_dissect_free(edt);
-		edt = NULL;
-	};
 }
 
 static void
