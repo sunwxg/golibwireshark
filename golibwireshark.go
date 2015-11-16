@@ -1,5 +1,5 @@
 /*
-Package golibwireshark use libwireshark library to decode pcap file.
+Package golibwireshark use libwireshark library to decode pcap file and analysis dissection data.
 */
 package golibwireshark
 
