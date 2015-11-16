@@ -30,8 +30,6 @@ void clean();
 
 int  write_to_file();
 
-void print_xml_packet();
-
 void print_field_value(char *name);
 
 struct epan_dissect *next_packet();
@@ -61,8 +59,6 @@ static gboolean read_packet(epan_dissect_t **edt_r);
 static void timestamp_set(capture_file cfile);
 
 static const nstime_t *tshark_get_frame_ts(void *data, guint32 frame_num);
-
-//static gboolean find_field(struct epan_dissect *edt, const char *name, char **value);
 
 static gboolean proto_tree_pre_order(proto_tree *tree, const char *name, proto_node **node);
 

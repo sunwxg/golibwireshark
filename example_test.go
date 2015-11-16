@@ -2,7 +2,8 @@ package golibwireshark_test
 
 import (
 	"fmt"
-	"mypkg/golibwireshark"
+
+	"github.com/sunwxg/golibwireshark"
 )
 
 func Example() {

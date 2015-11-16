@@ -3,21 +3,10 @@ package golibwireshark_test
 import (
 	"bytes"
 	"fmt"
-	"mypkg/golibwireshark"
 	"testing"
+
+	"github.com/sunwxg/golibwireshark"
 )
-
-//func TestDecode(t *testing.T) {
-//file := "1.pcap"
-//golibwireshark.Init(file)
-////err != nil {
-////t.Errorf("init failed\n")
-////}
-
-//golibwireshark.PrintPacket()
-
-//golibwireshark.Clean()
-//}
 
 func TestIsKey(t *testing.T) {
 	file := "1.pcap"
