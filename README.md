@@ -8,11 +8,10 @@ libwireshark library (I tested on version 1.12.7)
 
 ###Install
 - ubuntu
-
->apt-get install libwireshark-dev
-
->go get github.com/sunwxg/golibwireshark
-
+```
+apt-get install libwireshark-dev
+go get github.com/sunwxg/golibwireshark
+```
 ###Examples
 ```go
 file := "1.pcap"
