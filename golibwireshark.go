@@ -28,9 +28,8 @@ type Packet struct {
 	Field *C.struct__proto_node  //packet field index
 }
 
-//Init initializing the dissection. If open inputfile or savefile fail,
+//Init initializing the dissection. If opening inputfile or savefile fail,
 //return err. After dissection finish, should use Clean() to end the dissection.
-//Do it before GetPacket().
 func Init(inputfile, savefile string) error {
 	var err C.int
 
