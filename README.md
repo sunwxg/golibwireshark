@@ -7,8 +7,8 @@ Package golibwireshark use libwireshark library to decode pcap file and analysis
 libwireshark library (I tested on version 1.12.7)
 
 ###Install
-####ubuntu
-apt-get install libwireshark-dev
+>####ubuntu
+>>apt-get install libwireshark-dev
 
 ###Examples
 ```go
