@@ -30,13 +30,13 @@ type Packet struct {
 
 //Init initializing the dissection. If opening inputfile or savefile fail,
 //return err. After dissection finish, should use Clean() to end the dissection.
-func Init(inputfile, savefile string) error {
+func Init(inputfile, outputfile string) error {
 	var err C.int
 
-	if savefile == "" {
+	if outputfile == "" {
 		err = C.init(C.CString(inputfile), nil)
 	} else {
-		err = C.init(C.CString(inputfile), C.CString(savefile))
+		err = C.init(C.CString(inputfile), C.CString(outputfile))
 	}
 
 	if err != 0 {
@@ -51,6 +51,8 @@ func Clean() {
 	C.clean()
 }
 
+//ReOpenInputFile open a new input file after CloseInputFile.
+//If open file failed, return error.
 func ReOpenInputFile(filename string) error {
 	var err C.int
 
@@ -61,6 +63,8 @@ func ReOpenInputFile(filename string) error {
 	return nil
 }
 
+//ReOpenOutputFile open a new output file after CloseOutputFile.
+//if open file failed, return error.
 func ReOpenOutputFile(filename string) error {
 	var err C.int
 
@@ -72,10 +76,12 @@ func ReOpenOutputFile(filename string) error {
 
 }
 
+//CloseInputFile close input file. Using ReOpenInputFile to open a new input file.
 func CloseInputFile() {
 	C.clean_cfile()
 }
 
+//CloseOutputFile close output file. Using ReOpenOutputFile to open a new output file.
 func CloseOutputFile() {
 	C.clean_pdh()
 }
@@ -89,9 +95,9 @@ func (p Packet) Iskey(key string) (value string, ok bool) {
 	value = C.GoString(buf)
 	if value == "" {
 		return "", false
-	} else {
-		return value, true
 	}
+
+	return value, true
 }
 
 //GetPacket get one packet data index which has been dissected. If no more
@@ -143,7 +149,7 @@ func (p Packet) String() string {
 	return buf
 }
 
-//WriteToFile write a packet to file. If savefile aren't be initialized,
+//WriteToFile write a packet to file. If Output file are not initialized,
 //return error.
 func (p *Packet) WriteToFile() error {
 	if i := C.write_to_file(); i == 0 {
