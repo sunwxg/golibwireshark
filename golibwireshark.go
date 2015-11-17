@@ -51,6 +51,35 @@ func Clean() {
 	C.clean()
 }
 
+func ReOpenInputFile(filename string) error {
+	var err C.int
+
+	err = C.init_cfile(C.CString(filename))
+	if err != 0 {
+		return fmt.Errorf("can't open file")
+	}
+	return nil
+}
+
+func ReOpenOutputFile(filename string) error {
+	var err C.int
+
+	err = C.init_pdh(C.CString(filename))
+	if err != 0 {
+		return fmt.Errorf("can't create output file")
+	}
+	return nil
+
+}
+
+func CloseInputFile() {
+	C.clean_cfile()
+}
+
+func CloseOutputFile() {
+	C.clean_pdh()
+}
+
 //Iskey find a key in packet dissection data. If key exists, ok=ture,
 //value is key value, otherwise ok=false.
 func (p Packet) Iskey(key string) (value string, ok bool) {

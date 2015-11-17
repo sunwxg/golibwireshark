@@ -26,7 +26,15 @@ wtap_dumper *pdh;    //output file index
 
 int init(char *filename, char *savefile);
 
+int init_cfile(char *filename);
+
+int init_pdh(char *savefile);
+
 void clean();
+
+void clean_cfile();
+
+void clean_pdh();
 
 int  write_to_file();
 

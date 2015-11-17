@@ -16,6 +16,7 @@ int init_cfile(char *filename)
 {
 	int          err;
 	gchar       *err_info = NULL;
+	e_prefs     *prefs_p;
 
 	cap_file_init(&cfile);
 	cfile.filename = filename;
@@ -32,6 +33,10 @@ int init_cfile(char *filename)
 
 	timestamp_set(cfile);
 	cfile.frames = new_frame_data_sequence();
+
+	prefs_p = get_prefs();
+
+	build_column_format_array(&cfile.cinfo, prefs_p->num_cols, TRUE);
 
 	return 0;
 }
@@ -52,7 +57,6 @@ int init_pdh(char *savefile)
 int init(char *filename, char *savefile)
 {
 	int          err = 0;
-	e_prefs     *prefs_p;
 
 	init_process_policies();
 
@@ -65,10 +69,6 @@ int init(char *filename, char *savefile)
 	err = init_pdh(savefile);
 	if (err != 0)
 		goto fail;
-
-	prefs_p = get_prefs();
-
-	build_column_format_array(&cfile.cinfo, prefs_p->num_cols, TRUE);
 
 	return 0;
 fail:
@@ -151,8 +151,10 @@ void clean_cfile()
 		cfile.wth = NULL;
 	}
 
-	if (cfile.epan != NULL)
+	if (cfile.epan != NULL) {
 		epan_free(cfile.epan);
+		cfile.epan = NULL;
+	}
 }
 
 void clean_pdh()
@@ -162,6 +164,7 @@ void clean_pdh()
 	if (pdh != NULL) {
 		wtap_dump_close(pdh, &err);
 	}
+	pdh = NULL;
 }
 
 static void

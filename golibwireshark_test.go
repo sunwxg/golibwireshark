@@ -9,8 +9,6 @@ import (
 	"github.com/sunwxg/golibwireshark"
 )
 
-var p golibwireshark.Packet
-
 func TestMain(m *testing.M) {
 	file := "1.pcap"
 	err := golibwireshark.Init(file, "o.pcap")
@@ -19,23 +17,34 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
+	golibwireshark.CloseInputFile()
+	golibwireshark.CloseOutputFile()
+
+	m.Run()
+
+	golibwireshark.Clean()
+}
+
+func TestIsKey(t *testing.T) {
+	file := "1.pcap"
+	err := golibwireshark.ReOpenInputFile(file)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+
+	var p golibwireshark.Packet
+
 	p.GetPacket()
 	if p.Edt == nil {
 		fmt.Println("can't find packet")
 		os.Exit(1)
 	}
 
-	m.Run()
-
-	p.FreePacket()
-
-	golibwireshark.Clean()
-
-}
-
-func TestIsKey(t *testing.T) {
 	key := "ip.addr"
 	get, _ := p.Iskey(key)
+
+	p.FreePacket()
+	golibwireshark.CloseInputFile()
 
 	wanted := "10.128.229.6"
 	if get != wanted {
@@ -45,12 +54,29 @@ func TestIsKey(t *testing.T) {
 }
 
 func TestGetField(t *testing.T) {
+	file := "1.pcap"
+	err := golibwireshark.ReOpenInputFile(file)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+
+	var p golibwireshark.Packet
+
+	p.GetPacket()
+	if p.Edt == nil {
+		fmt.Println("can't find packet")
+		os.Exit(1)
+	}
+
 	buf := make([]byte, 100, 200)
 	w := bytes.NewBuffer(buf)
 
 	if p.GetField("ip") {
 		fmt.Fprintln(w, p)
 	}
+
+	p.FreePacket()
+	golibwireshark.CloseInputFile()
 
 	len := w.Len()
 	wanted_len := 662
@@ -60,10 +86,31 @@ func TestGetField(t *testing.T) {
 }
 
 func TestWriteToFile(t *testing.T) {
+	file := "1.pcap"
+	err := golibwireshark.ReOpenInputFile(file)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
 
-	err := p.WriteToFile()
+	err = golibwireshark.ReOpenOutputFile("o.pcap")
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+
+	var p golibwireshark.Packet
+
+	p.GetPacket()
+	if p.Edt == nil {
+		fmt.Println("can't find packet")
+		os.Exit(1)
+	}
+
+	err = p.WriteToFile()
 	if err != nil {
 		t.Errorf("%s", err)
 	}
 
+	p.FreePacket()
+	golibwireshark.CloseInputFile()
+	golibwireshark.CloseOutputFile()
 }
