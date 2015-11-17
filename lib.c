@@ -36,6 +36,19 @@ int init_cfile(char *filename)
 	return 0;
 }
 
+int init_pdh(char *savefile)
+{
+	int err;
+
+	if (savefile != NULL){
+		if (!open_output_file(savefile, &err)) {
+			return err;
+		}
+	}
+
+	return 0;
+}
+
 int init(char *filename, char *savefile)
 {
 	int          err = 0;
@@ -49,13 +62,9 @@ int init(char *filename, char *savefile)
 	if (err != 0)
 		goto fail;
 
-	//init pdh. output file
-	if (savefile != NULL){
-		if (!open_output_file(savefile, &err)) {
-			/*printf("open output file error\n");*/
-			goto fail;
-		}
-	}
+	err = init_pdh(savefile);
+	if (err != 0)
+		goto fail;
 
 	prefs_p = get_prefs();
 
@@ -128,6 +137,31 @@ void clean()
 		epan_free(cfile.epan);
 
 	epan_cleanup();
+}
+
+void clean_cfile()
+{
+	if (cfile.frames != NULL) {
+		free_frame_data_sequence(cfile.frames);
+		cfile.frames = NULL;
+	}
+
+	if (cfile.wth != NULL) {
+		wtap_close(cfile.wth);
+		cfile.wth = NULL;
+	}
+
+	if (cfile.epan != NULL)
+		epan_free(cfile.epan);
+}
+
+void clean_pdh()
+{
+	int err = 0;
+
+	if (pdh != NULL) {
+		wtap_dump_close(pdh, &err);
+	}
 }
 
 static void
