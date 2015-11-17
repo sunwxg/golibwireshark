@@ -21,8 +21,7 @@ func main() {
 			break
 		}
 
-		//key := "ip.addr"
-		if v := p.Iskey(key); v != "" {
+		if v, ok := p.Iskey(key); ok {
 			fmt.Printf("[%s] %s\n", key, v)
 		}
 

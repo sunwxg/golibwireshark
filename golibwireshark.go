@@ -51,14 +51,18 @@ func Clean() {
 	C.clean()
 }
 
-//Iskey find a key in packet dissection data. If key exists, return value,
-//otherwise return "".
-func (p Packet) Iskey(key string) (value string) {
+//Iskey find a key in packet dissection data. If key exists, ok=ture,
+//value is key value, otherwise ok=false.
+func (p Packet) Iskey(key string) (value string, ok bool) {
 	buf := C.get_field_value(p.Edt, C.CString(key))
 	defer C.free(unsafe.Pointer(buf))
 
 	value = C.GoString(buf)
-	return value
+	if value == "" {
+		return "", false
+	} else {
+		return value, true
+	}
 }
 
 //GetPacket get one packet data index which has been dissected. If no more

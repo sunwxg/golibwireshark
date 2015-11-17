@@ -23,7 +23,7 @@ func TestIsKey(t *testing.T) {
 	}
 
 	key := "ip.addr"
-	get := p.Iskey(key)
+	get, _ := p.Iskey(key)
 
 	//fmt.Println(p)
 	buf := make([]byte, 100, 200)
