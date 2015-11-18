@@ -16,8 +16,6 @@ func main() {
 	}
 	defer golibwireshark.Clean()
 
-	//golibwireshark.PrintPacket()
-
 	var p golibwireshark.Packet
 
 	for {

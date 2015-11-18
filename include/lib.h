@@ -42,7 +42,11 @@ void print_field_value(char *name);
 
 struct epan_dissect *next_packet();
 
-char *get_field_value(struct epan_dissect *edt, char *name);
+struct _GPtrArray * get_field_values(struct epan_dissect *edt, const char *name);
+
+char *finfo_to_value(void *finfo);
+
+void *g_ptr_array_data(struct _GPtrArray *array, int index);
 
 void free_packet(struct epan_dissect *edt);
 

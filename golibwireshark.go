@@ -86,18 +86,24 @@ func CloseOutputFile() {
 	C.clean_pdh()
 }
 
-//Iskey find a key in packet dissection data. If key exists, ok=ture,
+//IsKey find a key in packet dissection data. If key exists, ok=ture,
 //value is key value, otherwise ok=false.
-func (p Packet) Iskey(key string) (value string, ok bool) {
-	buf := C.get_field_value(p.Edt, C.CString(key))
-	defer C.free(unsafe.Pointer(buf))
+func (p Packet) IsKey(key string) (values []string, ok bool) {
+	finfoArray := C.get_field_values(p.Edt, C.CString(key))
+	defer C.g_ptr_array_free(finfoArray, 1)
 
-	value = C.GoString(buf)
-	if value == "" {
-		return "", false
+	if finfoArray != nil {
+		for i := 0; i < int(finfoArray.len); i++ {
+			finfo := C.g_ptr_array_data(finfoArray, C.int(i))
+			value := C.finfo_to_value(unsafe.Pointer(finfo))
+			values = append(values, C.GoString(value))
+		}
 	}
 
-	return value, true
+	if len(values) == 0 {
+		return values, false
+	}
+	return values, true
 }
 
 //GetPacket get one packet data index which has been dissected. If no more

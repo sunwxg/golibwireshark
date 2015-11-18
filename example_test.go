@@ -26,7 +26,7 @@ func Example() {
 			break
 		}
 
-		if _, ok := p.Iskey(key); ok {
+		if _, ok := p.IsKey(key); ok {
 			p.WriteToFile()
 		}
 

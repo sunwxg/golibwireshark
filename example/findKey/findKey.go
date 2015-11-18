@@ -21,8 +21,10 @@ func main() {
 			break
 		}
 
-		if v, ok := p.Iskey(key); ok {
-			fmt.Printf("[%s] %s\n", key, v)
+		if v, ok := p.IsKey(key); ok {
+			for _, p := range v {
+				fmt.Printf("[%s] %s\n", key, p)
+			}
 		}
 
 		p.FreePacket()

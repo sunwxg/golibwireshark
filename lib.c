@@ -225,20 +225,6 @@ cap_file_init(capture_file *cf)
 	cf->snap            = WTAP_MAX_PACKET_SIZE;
 }
 
-char *
-get_field_value(struct epan_dissect *edt, char *name)
-{
-	char *value;
-	struct _proto_node *node;
-
-	if (proto_tree_pre_order(edt->tree, name, &node)) {
-		fvalue_t fv = node->finfo->value;
-		value = fvalue_to_string_repr(&fv, FTREPR_DISPLAY, NULL);
-		return value;
-	}
-	return NULL;
-}
-
 struct epan_dissect *next_packet()
 {
 	epan_dissect_t *edt;
@@ -412,4 +398,56 @@ open_output_file(char *savefile, int *err)
 		return FALSE;
 	}
 	return TRUE;
+}
+
+static void
+proto_tree_foreach(proto_tree *tree, const char *name, GPtrArray **finfo_array)
+{
+	proto_node *node = tree;
+	proto_node *current;
+	field_info *fi;
+
+	if (!node)
+		return;
+
+	node = node->first_child;
+	while (node != NULL) {
+		current = node;
+		node    = current->next;
+
+		fi = PNODE_FINFO(current);
+		if (fi && fi->hfinfo) {
+			if (!strcmp(fi->hfinfo->abbrev, name)) {
+				g_ptr_array_add(*finfo_array, fi);
+			}
+		}
+
+		proto_tree_foreach(current, name, finfo_array);
+	}
+}
+
+struct _GPtrArray *
+get_field_values(struct epan_dissect *edt, const char *name)
+{
+	GPtrArray  *finfo_array;
+
+	finfo_array = g_ptr_array_new();
+
+	proto_tree_foreach(edt->tree, name, &finfo_array);
+
+	return finfo_array;
+}
+
+char *
+finfo_to_value(void *finfo)
+{
+	fvalue_t fv = ((field_info *)finfo)->value;
+	char *value = fvalue_to_string_repr(&fv, FTREPR_DISPLAY, NULL);
+	return value;
+}
+
+void *
+g_ptr_array_data(struct _GPtrArray *array, int index)
+{
+	return ((array)->pdata)[index];
 }
