@@ -117,25 +117,3 @@ func TestWriteToFile(t *testing.T) {
 	golibwireshark.CloseInputFile()
 	golibwireshark.CloseOutputFile()
 }
-
-//func TestGetValues(t *testing.T) {
-//file := "1.pcap"
-//err := golibwireshark.ReOpenInputFile(file)
-//if err != nil {
-//t.Fatalf("%s", err)
-//}
-
-//var p golibwireshark.Packet
-
-//p.GetPacket()
-//if p.Edt == nil {
-//fmt.Println("can't find packet")
-//os.Exit(1)
-//}
-
-//values, _ := p.GetValues("ip.addr")
-//fmt.Println(values)
-
-//p.FreePacket()
-//golibwireshark.CloseInputFile()
-//}
