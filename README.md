@@ -11,7 +11,7 @@ libglib2.0
 ###Install
 - ubuntu
 ```
-apt-get install libwireshark-dev libglib2.0-dev
+apt-get install libwireshark-dev libglib2.0-dev libwiretap-dev
 go get github.com/sunwxg/golibwireshark
 ```
 ###Examples
