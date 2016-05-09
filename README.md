@@ -4,15 +4,21 @@
 Package golibwireshark use libwireshark library to decode pcap file and analyse dissection data.
 
 ###Dependencies
-libwireshark library (I tested on version 1.12.7)
+* libwireshark library (I tested on version 1.12.7)
 
-libglib2.0
+* libglib2.0
 
 ###Install
 - ubuntu
 ```
 apt-get install libwireshark-dev libglib2.0-dev libwiretap-dev
 go get github.com/sunwxg/golibwireshark
+
+cd  ${GOPATH}/src/github.com/sunwxg
+cp include/cfile.h $(pkg-config --variable=includedir wireshark)/epan/
+
+go build
+go test
 ```
 ###Examples
 ```go
