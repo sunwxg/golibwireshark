@@ -11,7 +11,7 @@ Package golibwireshark use libwireshark library to decode pcap file and analyse 
 ###Install
 - ubuntu
 ```
-apt-get install libwireshark-dev libglib2.0-dev libwiretap-dev
+apt-get install libwireshark-dev libglib2.0-dev libwiretap-dev libwsutil-dev
 go get github.com/sunwxg/golibwireshark
 
 cd  ${GOPATH}/src/github.com/sunwxg
