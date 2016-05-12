@@ -3,19 +3,19 @@
 
 Package golibwireshark use libwireshark library to decode pcap file and analyse dissection data.
 
+This package can only be used in OS linux with CPU x86_64.
+If you want to use it on other CPU structure, you need compile library in libs folder from source code.
+
 ###Dependencies
-* libwireshark library (I tested on version 1.12.7)
+* libwireshark library (version 1.12.8)
 
 * libglib2.0
 
 ###Install
 - ubuntu
 ```
-apt-get install libwireshark-dev libglib2.0-dev libwiretap-dev libwsutil-dev
+apt-get install libglib2.0-dev
 go get github.com/sunwxg/golibwireshark
-
-cd  ${GOPATH}/src/github.com/sunwxg
-cp include/cfile.h $(pkg-config --variable=includedir wireshark)/epan/
 
 go build
 go test

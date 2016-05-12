@@ -5,13 +5,10 @@ package golibwireshark
 
 /*
 #cgo pkg-config: glib-2.0
-#cgo LDFLAGS: -lwiretap -lwsutil -lwireshark
-#cgo CFLAGS: -I.
-#cgo CFLAGS: -I/usr/include/glib-2.0
-#cgo CFLAGS: -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-#cgo CFLAGS: -I/usr/include/wireshark
-#cgo CFLAGS: -I/usr/include/wireshark/wiretap
-#cgo CFLAGS: -I./include
+#cgo LDFLAGS: -L${SRCDIR}/libs -lwiretap -lwsutil -lwireshark
+#cgo CFLAGS: -I${SRCDIR}/include/wireshark
+#cgo CFLAGS: -I${SRCDIR}/include/wireshark/wiretap
+#cgo CFLAGS: -I${SRCDIR}/include
 
 #include "./include/lib.h"
 
