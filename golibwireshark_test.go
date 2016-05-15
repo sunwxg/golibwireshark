@@ -82,7 +82,7 @@ func TestGetField(t *testing.T) {
 	golibwireshark.CloseInputFile()
 
 	len := w.Len()
-	wanted_len := 662
+	wanted_len := 644
 	if len != wanted_len {
 		t.Fatalf("wanted: (%d), get: (%d)", wanted_len, len)
 	}
