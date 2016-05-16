@@ -17,6 +17,10 @@ If you want to use it on other CPU structure, you need compile library in libs f
 apt-get install libglib2.0-dev
 go get github.com/sunwxg/golibwireshark
 
+cd $GOPATH/src/github.com/sunwxg/golibwireshark
+cat libs/libwireshark.{00,01,02,03} > libs/libwireshark.so
+chmod 775 libs/libwireshark.so
+
 go build
 go test
 ```
