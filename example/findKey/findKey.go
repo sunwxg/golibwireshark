@@ -21,9 +21,9 @@ func main() {
 			break
 		}
 
-		if v, ok := p.IsKey(key); ok {
-			for _, p := range v {
-				fmt.Printf("[%s] %s\n", key, p)
+		if valueList, ok := p.IsKey(key); ok {
+			for _, v := range valueList {
+				fmt.Printf("[%s] %s\n", key, v)
 			}
 		}
 
