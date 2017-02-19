@@ -10,6 +10,7 @@ package golibwireshark
 #cgo CFLAGS: -I${SRCDIR}/include/wireshark
 #cgo CFLAGS: -I${SRCDIR}/include/wireshark/wiretap
 #cgo CFLAGS: -I${SRCDIR}/include
+#cgo CFLAGS: -std=c99
 
 #include "./include/lib.h"
 
